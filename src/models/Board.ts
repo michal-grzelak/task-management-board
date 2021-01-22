@@ -1,7 +1,15 @@
-import { Base } from './Base'
-import { Column } from './Column'
+import _ from 'lodash'
 
-export interface Board extends Base {
-    title: string
-    columns: Column[]
+import { Base } from './Base'
+import { IBoard } from './IBoard'
+import { IColumn } from './IColumn'
+
+export class Board extends Base implements IBoard {
+    title!: string
+    columns!: IColumn[]
+
+    constructor(board: IBoard) {
+        super()
+        _.merge(this, board)
+    }
 }

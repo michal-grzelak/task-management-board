@@ -1,8 +1,19 @@
-import { Base } from './Base'
-import { Status } from './Status'
+import _ from 'lodash'
 
-export interface Column extends Base {
-    title: string
-    statuses: Status[]
-    boardId: string
+import { Base } from './Base'
+import { IColumn } from './IColumn'
+import { IStatus } from './IStatus'
+
+export class Column extends Base implements IColumn {
+    title!: string
+    statuses!: IStatus[]
+    boardId!: string
+    id!: string
+    createdAt!: Date
+    updatedAt!: Date
+
+    constructor(column: IColumn) {
+        super()
+        _.merge(this, column)
+    }
 }
