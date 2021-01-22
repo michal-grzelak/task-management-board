@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "react-app",
+    "react-app/jest",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react/recommended",
+    "plugin:jest/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:testing-library/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:prettier/recommended",
+    "prettier",
+    "prettier/@typescript-eslint",
+    "prettier/flowtype",
+    "prettier/prettier",
+    "prettier/react"
+  ],
+  "rules": {}
+}
