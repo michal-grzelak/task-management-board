@@ -14,6 +14,7 @@ export class Column extends Base implements IColumn {
 
     constructor(column: IColumn) {
         super()
-        _.merge(this, column)
+
+        if (column) _.assign(this, column)
     }
 }
