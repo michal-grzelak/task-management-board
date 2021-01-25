@@ -10,6 +10,7 @@ export class Board extends Base implements IBoard {
 
     constructor(board: IBoard) {
         super()
-        _.merge(this, board)
+
+        if (board) _.assign(this, board)
     }
 }
