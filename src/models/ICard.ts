@@ -4,8 +4,8 @@ import { CardType } from './CardType'
 
 export interface ICard extends IBase {
     title: string
-    status: IStatus
+    status?: IStatus
     description: string
     type: CardType
-    columnId: string
+    columnId?: string
 }

@@ -14,6 +14,7 @@ export class Card extends Base implements ICard {
 
     constructor(card: ICard) {
         super()
-        _.merge(this, card)
+
+        if (card) _.assign(this, card)
     }
 }
