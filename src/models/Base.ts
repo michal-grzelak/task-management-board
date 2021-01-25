@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid'
+
 import { IBase } from './IBase'
 
 export class Base implements IBase {
@@ -6,8 +8,8 @@ export class Base implements IBase {
     updatedAt: Date
 
     constructor() {
-        this.id = '1'
+        this.id = uuid()
         this.createdAt = new Date()
-        this.updatedAt = new Date()
+        this.updatedAt = this.createdAt
     }
 }
