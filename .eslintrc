@@ -1,4 +1,8 @@
 {
+  "plugins": [
+    "@typescript-eslint",
+    "import"
+  ],
   "extends": [
     "react-app",
     "react-app/jest",
@@ -17,5 +21,10 @@
     "prettier/prettier",
     "prettier/react"
   ],
-  "rules": {}
+  "rules": {},
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
 }

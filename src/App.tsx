@@ -1,7 +1,8 @@
 import React from 'react'
 import { BrowserRouter, Link, Switch, Route } from 'react-router-dom'
-import { ExamplePage } from './pages/ExamplePage'
-import { BoardListPage } from './pages/BoardListPage'
+
+import { ExamplePage } from '@pages/ExamplePage'
+import { BoardListPage } from '@pages/BoardListPage'
 
 function App() {
     return (
