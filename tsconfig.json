@@ -21,7 +21,8 @@
             "@pages/*": ["src/pages/*"],
             "@models/*": ["src/models/*"],
             "@components/*": ["src/components/*"],
-            "@machines": ["src/machines"]
+            "@machines": ["src/machines"],
+            "@machines/*": ["src/machines/*"]
         }
     },
     "include": ["src"]
