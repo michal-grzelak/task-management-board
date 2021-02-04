@@ -2,7 +2,7 @@
 import { muiTheme, theme } from '@theme'
 
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from 'react-dom'
 import { ThemeProvider } from 'styled-components'
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
 
@@ -10,7 +10,7 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 
-ReactDOM.render(
+render(
     <React.StrictMode>
         <MuiThemeProvider theme={muiTheme}>
             <ThemeProvider theme={theme}>
