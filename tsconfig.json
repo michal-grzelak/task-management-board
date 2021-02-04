@@ -20,7 +20,8 @@
             "@theme": ["src/theme"],
             "@pages/*": ["src/pages/*"],
             "@models/*": ["src/models/*"],
-            "@components/*": ["src/components/*"]
+            "@components/*": ["src/components/*"],
+            "@machines": ["src/machines"]
         }
     },
     "include": ["src"]
