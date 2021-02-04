@@ -8,7 +8,7 @@ const BoardListPage = () => {
     return (
         <Container>
             <Grid container justify={'center'}>
-                <Grid item xs={4} className={'create-button'}>
+                <Grid item xs={4} className={'button-create-board'}>
                     <Button>Create Board</Button>
                 </Grid>
             </Grid>
