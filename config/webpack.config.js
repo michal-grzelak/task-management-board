@@ -342,6 +342,10 @@ module.exports = function (webpackEnv) {
                     'react-dom$': 'react-dom/profiling',
                     'scheduler/tracing': 'scheduler/tracing-profiling',
                 }),
+                '@theme': 'src/theme',
+                '@pages': 'src/pages',
+                '@models': 'src/models',
+                '@components': 'src/components',
                 ...(modules.webpackAliases || {}),
             },
             plugins: [

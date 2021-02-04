@@ -1,6 +1,8 @@
 import React from 'react'
 import { BrowserRouter, Link, Switch, Route } from 'react-router-dom'
-import { ExamplePage } from './pages/ExamplePage'
+
+import { ExamplePage } from '@pages/ExamplePage'
+import { BoardListPage } from '@pages/BoardListPage'
 
 function App() {
     return (
@@ -11,10 +13,7 @@ function App() {
                         <Link to="/">Home</Link>
                     </li>
                     <li>
-                        <Link to="/about">About</Link>
-                    </li>
-                    <li>
-                        <Link to="/dashboard">Dashboard</Link>
+                        <Link to="/boards">Boards</Link>
                     </li>
                 </ul>
 
@@ -23,6 +22,9 @@ function App() {
                 <Switch>
                     <Route exact path="/">
                         <ExamplePage />
+                    </Route>
+                    <Route path="/boards">
+                        <BoardListPage />
                     </Route>
                 </Switch>
             </div>
