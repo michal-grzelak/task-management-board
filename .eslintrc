@@ -16,12 +16,13 @@
     "plugin:import/typescript",
     "plugin:prettier/recommended",
     "prettier",
+    "prettier/react",
     "prettier/@typescript-eslint",
-    "prettier/flowtype",
-    "prettier/prettier",
-    "prettier/react"
+    "prettier/prettier"
   ],
-  "rules": {},
+  "rules": {
+    "react-hooks/exhaustive-deps": 0
+  },
   "settings": {
     "import/resolver": {
       "typescript": {}

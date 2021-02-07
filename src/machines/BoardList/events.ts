@@ -1,9 +1,21 @@
+import { DoneInvokeEvent } from 'xstate'
+import { Board } from '@models/Board'
 import { BoardListEvents } from './constants'
 
 export type FetchBoardsEvent = { type: BoardListEvents.FETCH }
+export type AddBoardEvent = { type: BoardListEvents.ADD }
+export type AddBoardSuccessEvent = DoneInvokeEvent<Board>
 
 export const fetchBoardsEvent: FetchBoardsEvent = {
     type: BoardListEvents.FETCH,
 }
 
-export type BoardListEvent = FetchBoardsEvent
+export const addBoardEvent: AddBoardEvent = {
+    type: BoardListEvents.ADD,
+}
+
+export type BoardListEvent =
+    | DoneInvokeEvent<any>
+    | FetchBoardsEvent
+    | AddBoardEvent
+    | AddBoardSuccessEvent

@@ -1,8 +1,19 @@
-import { Machine } from 'xstate'
+import { assign, Machine } from 'xstate'
 import { BoardListContext } from './context'
 import { BoardListSchema } from './schema'
-import { BoardListEvent } from './events'
+import { AddBoardSuccessEvent, BoardListEvent } from './events'
 import { BoardListEvents, BoardListState } from './constants'
+import { BoardBuilder } from '@models/builders/BoardBuilder'
+
+const addBoardSuccess = assign<BoardListContext, AddBoardSuccessEvent>(
+    (context, event) => {
+        console.log('Add board success!')
+
+        return {
+            boards: [...context.boards, event.data],
+        }
+    }
+)
 
 export const boardListMachine = Machine<
     BoardListContext,
@@ -19,6 +30,7 @@ export const boardListMachine = Machine<
             [BoardListState.IDLE]: {
                 on: {
                     [BoardListEvents.FETCH]: BoardListState.FETCHING,
+                    [BoardListEvents.ADD]: BoardListState.ADDING,
                 },
             },
             [BoardListState.FETCHING]: {
@@ -35,6 +47,20 @@ export const boardListMachine = Machine<
                     },
                 },
             },
+            [BoardListState.ADDING]: {
+                invoke: {
+                    id: 'addBoard',
+                    src: 'addBoard',
+                    onDone: {
+                        target: BoardListState.IDLE,
+                        actions: addBoardSuccess,
+                    },
+                    onError: {
+                        target: BoardListState.ERROR,
+                        actions: 'addBoardFailure',
+                    },
+                },
+            },
             [BoardListState.ERROR]: {},
         },
     },
@@ -46,12 +72,24 @@ export const boardListMachine = Machine<
             fetchBoardsFailure: (context, event) => {
                 console.log('Fetch boards failure!')
             },
+            addBoardFailure: (context, event) => {
+                console.log('Add board failure!')
+            },
         },
         services: {
             fetchBoards: (context, event) => {
                 console.log('Fetching...')
 
                 return Promise.resolve([])
+            },
+            addBoard: (context, event) => {
+                console.log('Adding board...')
+
+                return Promise.resolve(
+                    new BoardBuilder()
+                        .withTitle(`Board ${context.boards.length + 1}`)
+                        .build()
+                )
             },
         },
     }

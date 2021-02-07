@@ -1,5 +1,5 @@
 import { SpawnedActorRef } from 'xstate'
 
 export interface BoardListContext {
-    boards: SpawnedActorRef<any>[]
+    boards: any[]
 }
