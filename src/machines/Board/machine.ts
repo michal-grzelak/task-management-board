@@ -18,7 +18,7 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
         initial: BoardState.INITIALIZING,
         context: {
             id: '',
-            board: null,
+            board: undefined,
         },
         states: {
             [BoardState.IDLE]: {

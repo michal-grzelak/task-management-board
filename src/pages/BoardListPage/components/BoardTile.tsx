@@ -1,23 +1,20 @@
 import React, { FunctionComponent } from 'react'
 import { Card, CardContent, CardHeader } from '@material-ui/core'
 
-import { useActor } from '@xstate/react'
-import { BoardActor } from '@machines/BoardList/context'
+import { Board } from '@models/Board'
 
 interface BoardProps {
-    boardActor: BoardActor
+    board?: Board
+    state: string
 }
 
 const BoardTile: FunctionComponent<BoardProps> = ({
-    boardActor,
+    board,
+    state,
 }: BoardProps) => {
-    const [state, send] = useActor(boardActor)
-
-    const { board } = state.context
+    if (!board) return <></>
 
     console.log(state)
-
-    if (!board) return <></>
 
     return (
         <Card className={'card'}>
