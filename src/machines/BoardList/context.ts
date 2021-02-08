@@ -1,5 +1,5 @@
-import { SpawnedActorRef } from 'xstate'
+import { Board } from '@models/Board'
 
 export interface BoardListContext {
-    boards: any[]
+    boards: Board[]
 }

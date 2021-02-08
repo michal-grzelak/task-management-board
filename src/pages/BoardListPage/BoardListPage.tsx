@@ -9,7 +9,7 @@ import {
     fetchBoardsEvent,
 } from '@machines/BoardList'
 import './style.scss'
-import Board from '@pages/BoardListPage/components/Board'
+import BoardTile from '@pages/BoardListPage/components/BoardTile'
 
 const BoardListPage = () => {
     const [state, send] = useMachine(boardListMachine)
@@ -25,7 +25,7 @@ const BoardListPage = () => {
     const boards = state.context.boards
 
     return (
-        <Container>
+        <Container maxWidth={false}>
             <Grid container justify={'center'}>
                 <Grid item xs={4} className={'button-create-board'}>
                     <Button onClick={addBoard}>Create Board</Button>
@@ -40,7 +40,7 @@ const BoardListPage = () => {
                         className={'button-create-board'}
                         justify={'center'}
                     >
-                        <Board board={board} />
+                        <BoardTile board={board} />
                     </Grid>
                 ))}
             </Grid>
