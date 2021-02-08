@@ -40,7 +40,7 @@ const BoardListPage = () => {
                         className={'button-create-board'}
                         justify={'center'}
                     >
-                        <BoardTile board={board} />
+                        <BoardTile boardActor={board} />
                     </Grid>
                 ))}
             </Grid>

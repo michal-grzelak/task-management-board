@@ -1,16 +1,28 @@
-import { assign, Machine } from 'xstate'
+import { assign, Machine, spawn } from 'xstate'
 import { BoardListContext } from './context'
 import { BoardListSchema } from './schema'
 import { AddBoardSuccessEvent, BoardListEvent } from './events'
 import { BoardListEvents, BoardListState } from './constants'
 import { BoardBuilder } from '@models/builders/BoardBuilder'
+import { boardMachine } from '@machines/Board'
 
 const addBoardSuccess = assign<BoardListContext, AddBoardSuccessEvent>(
     (context, event) => {
         console.log('Add board success!')
 
+        const board = event.data
+
         return {
-            boards: [...context.boards, event.data],
+            boards: [
+                ...context.boards,
+                spawn(
+                    boardMachine.withContext({
+                        id: board.id,
+                        board: board,
+                    }),
+                    { name: `board-${board.id}` }
+                ),
+            ],
         }
     }
 )

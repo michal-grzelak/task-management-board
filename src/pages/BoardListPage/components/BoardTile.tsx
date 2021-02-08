@@ -1,20 +1,23 @@
 import React, { FunctionComponent } from 'react'
 import { Card, CardContent, CardHeader } from '@material-ui/core'
 
-import { Board } from '@models/Board'
-import { useMachine } from '@xstate/react'
-import { boardMachine } from '@machines/Board'
+import { useActor } from '@xstate/react'
+import { BoardActor } from '@machines/BoardList/context'
 
 interface BoardProps {
-    board: Board
+    boardActor: BoardActor
 }
 
-const BoardTile: FunctionComponent<BoardProps> = ({ board }: BoardProps) => {
-    const [state, send] = useMachine(
-        boardMachine.withContext({ id: board.id, board })
-    )
+const BoardTile: FunctionComponent<BoardProps> = ({
+    boardActor,
+}: BoardProps) => {
+    const [state, send] = useActor(boardActor)
+
+    const { board } = state.context
 
     console.log(state)
+
+    if (!board) return <></>
 
     return (
         <Card className={'card'}>
