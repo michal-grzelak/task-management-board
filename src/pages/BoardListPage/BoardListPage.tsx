@@ -3,13 +3,12 @@ import { Container, Grid } from '@material-ui/core'
 import { useMachine } from '@xstate/react'
 
 import { Button } from '@components/Button'
-import {
-    addBoardEvent,
-    boardListMachine,
-    fetchBoardsEvent,
-} from '@machines/BoardList'
+import { addBoardEvent, boardListMachine } from '@machines/BoardList'
+import { BoardListEvents } from '@machines/BoardList/constants'
+
+import BoardTile from './components/BoardTile'
+
 import './style.scss'
-import BoardTile from '@pages/BoardListPage/components/BoardTile'
 
 const BoardListPage = () => {
     const [state, send] = useMachine(boardListMachine)
@@ -17,7 +16,7 @@ const BoardListPage = () => {
     console.log(state)
 
     useEffect(() => {
-        send(fetchBoardsEvent)
+        send(BoardListEvents.FETCH)
     }, [])
 
     const addBoard = () => send(addBoardEvent)
@@ -26,8 +25,8 @@ const BoardListPage = () => {
 
     return (
         <Container maxWidth={false}>
-            <Grid container justify={'center'}>
-                <Grid item xs={4} className={'button-create-board'}>
+            <Grid container>
+                <Grid container item xs={12} justify={'center'}>
                     <Button onClick={addBoard}>Create Board</Button>
                 </Grid>
             </Grid>
@@ -36,6 +35,7 @@ const BoardListPage = () => {
                     <Grid
                         key={`board-item-${index}`}
                         container
+                        item
                         xs={3}
                         className={'button-create-board'}
                         justify={'center'}
