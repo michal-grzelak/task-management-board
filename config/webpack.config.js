@@ -346,6 +346,7 @@ module.exports = function (webpackEnv) {
                 '@pages': 'src/pages',
                 '@models': 'src/models',
                 '@components': 'src/components',
+                '@machines': 'src/machines',
                 ...(modules.webpackAliases || {}),
             },
             plugins: [
