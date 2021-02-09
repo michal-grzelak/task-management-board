@@ -11,7 +11,7 @@ import BoardTile from './components/BoardTile'
 import './style.scss'
 
 const BoardListPage = () => {
-    const [state, send] = useMachine(boardListMachine)
+    const [state, send] = useMachine(boardListMachine, { devTools: true })
 
     console.log(state)
 
@@ -37,7 +37,6 @@ const BoardListPage = () => {
                         container
                         item
                         xs={3}
-                        className={'button-create-board'}
                         justify={'center'}
                     >
                         <BoardTile

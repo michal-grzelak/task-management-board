@@ -90,7 +90,7 @@ export const boardListMachine = Machine<
         },
         services: {
             fetchBoards: (context, event) => {
-                console.log('Fetching...')
+                console.log('Fetching boards...')
 
                 return Promise.resolve([])
             },

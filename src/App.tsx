@@ -3,6 +3,7 @@ import { BrowserRouter, Link, Switch, Route } from 'react-router-dom'
 
 import { ExamplePage } from '@pages/ExamplePage'
 import { BoardListPage } from '@pages/BoardListPage'
+import { BoardDetailsPage } from '@pages/BoardDetailsPage'
 
 function App() {
     return (
@@ -22,6 +23,9 @@ function App() {
                 <Switch>
                     <Route exact path="/">
                         <ExamplePage />
+                    </Route>
+                    <Route path="/boards/:id">
+                        <BoardDetailsPage />
                     </Route>
                     <Route path="/boards">
                         <BoardListPage />

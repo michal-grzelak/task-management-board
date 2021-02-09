@@ -1,8 +1,14 @@
-import { EventObject, Machine, Receiver, Sender } from 'xstate'
+import { assign, EventObject, Machine, Receiver, Sender, spawn } from 'xstate'
 import { BoardContext } from './context'
 import { BoardSchema } from './schema'
-import { BoardEvent } from './events'
-import { BoardEvents, BoardState } from './constants'
+import {
+    AddColumnSuccessEvent,
+    BoardEvent,
+    FetchBoardSuccessEvent,
+} from './events'
+import { BoardEvents, BoardState, BoardUpdatingState } from './constants'
+import { BoardBuilder } from '@models/builders/BoardBuilder'
+import { ColumnBuilder } from '@models/builders/ColumnBuilder'
 
 const initialize = (context: BoardContext, _: BoardEvent) => (
     callback: Sender<any>,
@@ -12,9 +18,37 @@ const initialize = (context: BoardContext, _: BoardEvent) => (
     else callback(BoardEvents.GO_TO_IDLE)
 }
 
+const fetchBoardSuccess = assign<BoardContext, FetchBoardSuccessEvent>(
+    (context, event) => {
+        console.log('Fetch board success!')
+
+        const board = event.data
+
+        return {
+            board,
+        }
+    }
+)
+
+const addColumnSuccess = assign<BoardContext, AddColumnSuccessEvent>(
+    (context, event) => {
+        console.log('Add column success!')
+
+        const column = event.data
+        const board = context.board
+
+        board!.columns.push(column)
+
+        return {
+            board,
+        }
+    }
+)
+
 export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
     {
         key: 'board',
+        id: 'board',
         initial: BoardState.INITIALIZING,
         context: {
             id: '',
@@ -24,6 +58,7 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
             [BoardState.IDLE]: {
                 on: {
                     [BoardEvents.FETCH]: BoardState.FETCHING,
+                    [BoardEvents.ADD_COLUMN]: `${BoardState.UPDATING}.${BoardUpdatingState.ADDING_COLUMN}`,
                 },
             },
             [BoardState.INITIALIZING]: {
@@ -42,11 +77,29 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
                     src: 'fetchBoard',
                     onDone: {
                         target: BoardState.IDLE,
-                        actions: 'fetchBoardSuccess',
+                        actions: fetchBoardSuccess,
                     },
                     onError: {
                         target: BoardState.ERROR,
                         actions: 'fetchBoardError',
+                    },
+                },
+            },
+            [BoardState.UPDATING]: {
+                states: {
+                    [BoardUpdatingState.ADDING_COLUMN]: {
+                        invoke: {
+                            id: 'addColumn',
+                            src: 'addColumn',
+                            onDone: {
+                                target: `#board.${BoardState.IDLE}`,
+                                actions: addColumnSuccess,
+                            },
+                            onError: {
+                                target: `#board.${BoardState.ERROR}`,
+                                actions: 'addColumnFailure',
+                            },
+                        },
                     },
                 },
             },
@@ -55,18 +108,31 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
     },
     {
         actions: {
-            fetchBoardSuccess: (context, event) => {
-                console.log('Fetch board success!')
-            },
             fetchBoardFailure: (context, event) => {
                 console.log('Fetch board failure!')
+            },
+            addColumnFailure: (context, event) => {
+                console.log('Add column failure!')
             },
         },
         services: {
             fetchBoard: (context, event) => {
-                console.log('Fetching...')
+                console.log('Fetching board...')
 
-                return Promise.resolve(null)
+                return Promise.resolve(
+                    new BoardBuilder().withTitle(`Board 1`).build()
+                )
+            },
+            addColumn: (context, event) => {
+                console.log('Adding column...')
+
+                return Promise.resolve(
+                    new ColumnBuilder()
+                        .withTitle(
+                            `Column ${context.board!.columns.length + 1}`
+                        )
+                        .build()
+                )
             },
         },
     }

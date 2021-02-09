@@ -5,8 +5,8 @@ import { IBoard } from './IBoard'
 import { IColumn } from './IColumn'
 
 export class Board extends Base implements IBoard {
-    title!: string
-    columns!: IColumn[]
+    title: string = ''
+    columns: IColumn[] = []
 
     constructor(board: IBoard) {
         super()
