@@ -8,6 +8,7 @@ export interface BoardSchema {
         [BoardState.UPDATING]: {
             states: {
                 [BoardUpdatingState.ADDING_COLUMN]: {}
+                [BoardUpdatingState.UPDATING]: {}
             }
         }
         [BoardState.ERROR]: {}

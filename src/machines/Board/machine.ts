@@ -1,14 +1,19 @@
-import { assign, EventObject, Machine, Receiver, Sender, spawn } from 'xstate'
+import {
+    assign,
+    DoneInvokeEvent,
+    EventObject,
+    Machine,
+    Receiver,
+    Sender,
+} from 'xstate'
 import { BoardContext } from './context'
 import { BoardSchema } from './schema'
-import {
-    AddColumnSuccessEvent,
-    BoardEvent,
-    FetchBoardSuccessEvent,
-} from './events'
+import { BoardEvent, UpdateBoardEvent } from './events'
 import { BoardEvents, BoardState, BoardUpdatingState } from './constants'
 import { BoardBuilder } from '@models/builders/BoardBuilder'
 import { ColumnBuilder } from '@models/builders/ColumnBuilder'
+import { Board } from '@models/Board'
+import { Column } from '@models/Column'
 
 const initialize = (context: BoardContext, _: BoardEvent) => (
     callback: Sender<any>,
@@ -18,7 +23,7 @@ const initialize = (context: BoardContext, _: BoardEvent) => (
     else callback(BoardEvents.GO_TO_IDLE)
 }
 
-const fetchBoardSuccess = assign<BoardContext, FetchBoardSuccessEvent>(
+const fetchBoardSuccess = assign<BoardContext, DoneInvokeEvent<Board>>(
     (context, event) => {
         console.log('Fetch board success!')
 
@@ -30,7 +35,7 @@ const fetchBoardSuccess = assign<BoardContext, FetchBoardSuccessEvent>(
     }
 )
 
-const addColumnSuccess = assign<BoardContext, AddColumnSuccessEvent>(
+const addColumnSuccess = assign<BoardContext, DoneInvokeEvent<Column>>(
     (context, event) => {
         console.log('Add column success!')
 
@@ -45,6 +50,27 @@ const addColumnSuccess = assign<BoardContext, AddColumnSuccessEvent>(
     }
 )
 
+const updateBoardSuccess = assign<BoardContext, DoneInvokeEvent<Board>>(
+    (context, event) => {
+        console.log('Update board success!')
+
+        const board = event.data
+
+        return {
+            board,
+        }
+    }
+)
+
+const updateBoard = (context: BoardContext, event: UpdateBoardEvent) => {
+    console.log('Updating board...')
+
+    return Promise.resolve(event.board)
+}
+
+// @ts-ignore
+// @ts-ignore
+// @ts-ignore
 export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
     {
         key: 'board',
@@ -59,6 +85,7 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
                 on: {
                     [BoardEvents.FETCH]: BoardState.FETCHING,
                     [BoardEvents.ADD_COLUMN]: `${BoardState.UPDATING}.${BoardUpdatingState.ADDING_COLUMN}`,
+                    [BoardEvents.UPDATE]: `${BoardState.UPDATING}.${BoardUpdatingState.UPDATING}`,
                 },
             },
             [BoardState.INITIALIZING]: {
@@ -101,6 +128,20 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
                             },
                         },
                     },
+                    [BoardUpdatingState.UPDATING]: {
+                        invoke: {
+                            id: 'updateBoard',
+                            src: updateBoard as any,
+                            onDone: {
+                                target: `#board.${BoardState.IDLE}`,
+                                actions: updateBoardSuccess,
+                            },
+                            onError: {
+                                target: `#board.${BoardState.ERROR}`,
+                                actions: 'updateBoardFailure',
+                            },
+                        },
+                    },
                 },
             },
             [BoardState.ERROR]: {},
@@ -113,6 +154,9 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
             },
             addColumnFailure: (context, event) => {
                 console.log('Add column failure!')
+            },
+            updateBoardFailure: (context, event) => {
+                console.log('Update board failure!')
             },
         },
         services: {
