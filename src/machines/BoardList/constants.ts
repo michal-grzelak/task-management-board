@@ -1,8 +1,12 @@
 export enum BoardListState {
     IDLE = 'IDLE',
     FETCHING = 'FETCHING',
-    ADDING = 'ADDING',
+    UPDATING = 'UPDATING',
     ERROR = 'ERROR',
+}
+
+export enum BoardListUpdatingState {
+    ADDING = 'ADDING',
 }
 
 export enum BoardListEvents {
