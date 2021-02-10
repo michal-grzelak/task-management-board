@@ -18,7 +18,7 @@ const BoardIssue: FunctionComponent<BoardIssueProps> = ({
     issue,
 }: BoardIssueProps) => {
     return (
-        <Card className={'column'}>
+        <Card className={'issue'}>
             <CardHeader
                 title={issue.title}
                 subheader={issue.type}
