@@ -172,6 +172,7 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
 
                 return Promise.resolve(
                     new ColumnBuilder()
+                        .withBoardId(context.board!.id)
                         .withTitle(
                             `Column ${context.board!.columns.length + 1}`
                         )

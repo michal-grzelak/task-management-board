@@ -1,16 +1,25 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Container, Grid } from '@material-ui/core'
+import React, {
+    ChangeEvent,
+    FunctionComponent,
+    useEffect,
+    useState,
+} from 'react'
+import { Box, Container, Grid } from '@material-ui/core'
 import { useMachine } from '@xstate/react'
 
 import { Button } from '@components/Button'
 import { Input } from '@components/Input'
+
 import { boardMachine, updateBoardEvent } from '@machines/Board'
 import { BoardEvents, BoardState } from '@machines/Board/constants'
+
 import { Board } from '@models/Board'
+
+import BoardColumn from './components/BoardColumn'
 
 import './style.scss'
 
-const BoardDetailsPage = () => {
+const BoardDetailsPage: FunctionComponent = () => {
     const [state, send] = useMachine(boardMachine, { devTools: true })
     const board = state.context.board
 
@@ -30,24 +39,23 @@ const BoardDetailsPage = () => {
 
     const updateName = () => {
         update({ ...board!, title })
-    }
-
-    const update = (board: Board) => {
-        send(updateBoardEvent(board))
+        setTitle(board!.title)
     }
 
     const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setTitle(event.target.value)
     }
 
+    const update = (board: Board) => {
+        send(updateBoardEvent(board))
+    }
+
     console.log(state)
 
     const isLoading =
         !board ||
-        [
-            BoardState.INITIALIZING.valueOf(),
-            BoardState.FETCHING.valueOf(),
-        ].includes(state.value.toString())
+        state.matches(BoardState.INITIALIZING) ||
+        state.matches(BoardState.FETCHING)
 
     if (isLoading)
         return (
@@ -67,7 +75,7 @@ const BoardDetailsPage = () => {
                     <Button onClick={addColumn}>Add column</Button>
                 </Grid>
             </Grid>
-            <Grid container>
+            <Grid container style={{ marginBottom: 50 }}>
                 <Grid container item xs={12}>
                     <Input
                         value={title}
@@ -76,7 +84,18 @@ const BoardDetailsPage = () => {
                     />
                 </Grid>
             </Grid>
-            <Grid container>{JSON.stringify(board!)}</Grid>
+            <Grid container>
+                <Grid container item xs={12}>
+                    <Box style={{ overflowX: 'auto', display: 'flex' }}>
+                        {board!.columns.map((column) => (
+                            <BoardColumn
+                                key={`column-${column.id}`}
+                                column={column}
+                            />
+                        ))}
+                    </Box>
+                </Grid>
+            </Grid>
         </Container>
     )
 }

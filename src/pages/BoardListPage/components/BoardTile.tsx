@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react'
 import { Card, CardContent, CardHeader } from '@material-ui/core'
-
 import { useHistory } from 'react-router-dom'
 
 import { Board } from '@models/Board'
@@ -25,7 +24,7 @@ const BoardTile: FunctionComponent<BoardProps> = ({
     if (!board) return <></>
 
     return (
-        <Card className={'card'} onClick={goToBoard}>
+        <Card className={'board-tile'} onClick={goToBoard}>
             <CardHeader title={board.title} />
             <CardContent>{board.id}</CardContent>
         </Card>

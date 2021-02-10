@@ -29,6 +29,12 @@ export class ColumnBuilder implements IBuilder<IColumn, Column> {
         return this
     }
 
+    withBoardId = (boardId: string) => {
+        this.column.boardId = boardId
+
+        return this
+    }
+
     withStatuses = (statuses: IStatus[]) => {
         this.column.statuses = statuses
 

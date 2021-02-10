@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { FunctionComponent, useEffect } from 'react'
 import { Container, Grid } from '@material-ui/core'
 import { useMachine } from '@xstate/react'
 
 import { Button } from '@components/Button'
+
 import { addBoardEvent, boardListMachine } from '@machines/BoardList'
 import { BoardListEvents } from '@machines/BoardList/constants'
 
@@ -10,7 +11,7 @@ import BoardTile from './components/BoardTile'
 
 import './style.scss'
 
-const BoardListPage = () => {
+const BoardListPage: FunctionComponent = () => {
     const [state, send] = useMachine(boardListMachine, { devTools: true })
 
     console.log(state)
@@ -33,7 +34,7 @@ const BoardListPage = () => {
             <Grid container>
                 {boards.map((board, index) => (
                     <Grid
-                        key={`board-item-${index}`}
+                        key={`board-tile-${index}`}
                         container
                         item
                         xs={3}

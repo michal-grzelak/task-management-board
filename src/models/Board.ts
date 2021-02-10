@@ -2,11 +2,11 @@ import _ from 'lodash'
 
 import { Base } from './Base'
 import { IBoard } from './IBoard'
-import { IColumn } from './IColumn'
+import { Column } from './Column'
 
 export class Board extends Base implements IBoard {
     title: string = ''
-    columns: IColumn[] = []
+    columns: Column[] = []
 
     constructor(board: IBoard) {
         super()
