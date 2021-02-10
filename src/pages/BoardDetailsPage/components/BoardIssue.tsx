@@ -6,29 +6,27 @@ import {
     Grid,
     IconButton,
 } from '@material-ui/core'
-import { Add, Delete } from '@material-ui/icons'
+import { Edit, Delete } from '@material-ui/icons'
 
-import { Column } from '@models/Column'
+import { Issue } from '@models/Issue'
 
-import BoardIssue from './BoardIssue'
-
-interface BoardColumnProps {
-    column: Column
+interface BoardIssueProps {
+    issue: Issue
 }
 
-const BoardColumn: FunctionComponent<BoardColumnProps> = ({
-    column,
-}: BoardColumnProps) => {
+const BoardIssue: FunctionComponent<BoardIssueProps> = ({
+    issue,
+}: BoardIssueProps) => {
     return (
         <Card className={'column'}>
             <CardHeader
-                title={column.title}
-                subheader={column.id}
+                title={issue.title}
+                subheader={issue.type}
                 action={
                     <Grid container>
                         <Grid item>
-                            <IconButton aria-label="add">
-                                <Add />
+                            <IconButton aria-label="edit">
+                                <Edit />
                             </IconButton>
                         </Grid>
                         <Grid item>
@@ -39,13 +37,9 @@ const BoardColumn: FunctionComponent<BoardColumnProps> = ({
                     </Grid>
                 }
             />
-            <CardContent>
-                {column.issues.map((issue) => (
-                    <BoardIssue key={`issue-${issue.id}`} issue={issue} />
-                ))}
-            </CardContent>
+            <CardContent>test</CardContent>
         </Card>
     )
 }
 
-export default BoardColumn
+export default BoardIssue

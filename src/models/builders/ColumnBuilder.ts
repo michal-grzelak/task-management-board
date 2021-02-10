@@ -1,8 +1,8 @@
 import { IBuilder } from './IBuilder'
-import { IStatus } from '../IStatus'
 import { Base } from '../Base'
 import { IColumn } from '../IColumn'
 import { Column } from '../Column'
+import { Issue } from '../Issue'
 
 export class ColumnBuilder implements IBuilder<IColumn, Column> {
     private column: IColumn
@@ -11,7 +11,7 @@ export class ColumnBuilder implements IBuilder<IColumn, Column> {
         this.column = {
             ...new Base(),
             title: '',
-            statuses: [],
+            issues: [],
         }
     }
 
@@ -35,8 +35,8 @@ export class ColumnBuilder implements IBuilder<IColumn, Column> {
         return this
     }
 
-    withStatuses = (statuses: IStatus[]) => {
-        this.column.statuses = statuses
+    withIssues = (issues: Issue[]) => {
+        this.column.issues = issues
 
         return this
     }

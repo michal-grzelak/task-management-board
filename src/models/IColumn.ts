@@ -1,8 +1,8 @@
 import { IBase } from './IBase'
-import { IStatus } from './IStatus'
+import { IIssue } from './IIssue'
 
 export interface IColumn extends IBase {
     title: string
-    statuses: IStatus[]
+    issues: IIssue[]
     boardId?: string
 }

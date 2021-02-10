@@ -2,11 +2,11 @@ import _ from 'lodash'
 
 import { Base } from './Base'
 import { IColumn } from './IColumn'
-import { IStatus } from './IStatus'
+import { Issue } from './Issue'
 
 export class Column extends Base implements IColumn {
     title!: string
-    statuses!: IStatus[]
+    issues!: Issue[]
     boardId!: string
     id!: string
     createdAt!: Date
