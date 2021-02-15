@@ -8,7 +8,17 @@ import {
 } from 'xstate'
 import { BoardContext } from './context'
 import { BoardSchema } from './schema'
-import { BoardEvent, updateBoardEvent, UpdateBoardEvent } from './events'
+import {
+    AddColumnEvent,
+    AddIssueEvent,
+    BoardEvent,
+    DeleteColumnEvent,
+    DeleteIssueEvent,
+    updateBoardEvent,
+    UpdateBoardEvent,
+    UpdateColumnEvent,
+    UpdateIssueEvent,
+} from './events'
 import { BoardEvents, BoardState, BoardUpdatingState } from './constants'
 import { BoardBuilder } from '@models/builders/BoardBuilder'
 import { ColumnBuilder } from '@models/builders/ColumnBuilder'
@@ -50,6 +60,122 @@ const updateBoard = (context: BoardContext, event: UpdateBoardEvent) => {
     console.log('Updating board...')
 
     return Promise.resolve(event.board)
+}
+
+const addColumn = (context: BoardContext, event: AddColumnEvent) => (
+    callback: Sender<BoardEvent>,
+    _: Receiver<BoardEvent>
+) => {
+    console.log('Adding column...')
+
+    const board = { ...context.board! }
+
+    board.columns.push(event.column)
+
+    callback(updateBoardEvent(board))
+}
+
+const updateColumn = (context: BoardContext, event: UpdateColumnEvent) => (
+    callback: Sender<BoardEvent>,
+    _: Receiver<BoardEvent>
+) => {
+    console.log('Updating column...')
+
+    const board = { ...context.board! }
+
+    const columnIndex: number = board.columns.findIndex(
+        ({ id }) => id === event.column.id
+    )
+
+    if (columnIndex >= 0) {
+        board.columns[columnIndex] = event.column
+
+        callback(updateBoardEvent(board))
+    } else callback(BoardEvents.GO_TO_IDLE)
+}
+
+const deleteColumn = (context: BoardContext, event: DeleteColumnEvent) => (
+    callback: Sender<BoardEvent>,
+    _: Receiver<BoardEvent>
+) => {
+    console.log('Deleting column...')
+
+    const board = { ...context.board! }
+
+    const columnIndex: number = board.columns.findIndex(
+        ({ id }) => id === event.id
+    )
+
+    if (columnIndex >= 0) {
+        board.columns.splice(columnIndex, 1)
+
+        callback(updateBoardEvent(board))
+    } else callback(BoardEvents.GO_TO_IDLE)
+}
+
+const addIssue = (context: BoardContext, event: AddIssueEvent) => (
+    callback: Sender<BoardEvent>,
+    _: Receiver<BoardEvent>
+) => {
+    console.log('Adding issue...')
+
+    const board: Board = { ...context.board! }
+
+    const columnIndex: number = board.columns.findIndex(
+        ({ id }) => id === event.issue.columnId
+    )
+
+    if (columnIndex >= 0) {
+        board.columns[columnIndex].issues.push(event.issue)
+
+        callback(updateBoardEvent(board))
+    } else callback(BoardEvents.GO_TO_IDLE)
+}
+
+const updateIssue = (context: BoardContext, event: UpdateIssueEvent) => (
+    callback: Sender<BoardEvent>,
+    _: Receiver<BoardEvent>
+) => {
+    console.log('Updating issue...')
+
+    const board: Board = { ...context.board! }
+
+    const columnIndex: number = board.columns.findIndex(
+        ({ id }) => id === event.issue.columnId
+    )
+
+    const issueIndex: number = board.columns[columnIndex]?.issues?.findIndex(
+        ({ id }) => id === event.issue.id
+    )
+
+    if (issueIndex >= 0) {
+        board.columns[columnIndex].issues[issueIndex] = event.issue
+
+        callback(updateBoardEvent(board))
+    } else callback(BoardEvents.GO_TO_IDLE)
+}
+
+const deleteIssue = (context: BoardContext, event: DeleteIssueEvent) => (
+    callback: Sender<BoardEvent>,
+    _: Receiver<BoardEvent>
+) => {
+    console.log('Deleting issue...')
+
+    const board: Board = { ...context.board! }
+
+    const columnIndex: number = board.columns.findIndex(
+        ({ id }) => id === event.columnId
+    )
+
+    const issueIndex: number = board.columns[columnIndex]?.issues?.findIndex(
+        ({ id }) => id === event.issueId
+    )
+
+    if (issueIndex >= 0) {
+        board.columns[columnIndex].issues.splice(issueIndex, 1)
+
+        callback(updateBoardEvent(board))
+    } else callback(BoardEvents.GO_TO_IDLE)
 }
 
 export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
@@ -98,10 +224,11 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
                     [BoardUpdatingState.ADDING_COLUMN]: {
                         on: {
                             [BoardEvents.UPDATE]: BoardUpdatingState.UPDATING,
+                            [BoardEvents.GO_TO_IDLE]: `#board.${BoardState.IDLE}`,
                         },
                         invoke: {
                             id: 'addColumn',
-                            src: 'addColumn',
+                            src: addColumn as any,
                         },
                     },
                     [BoardUpdatingState.UPDATING]: {

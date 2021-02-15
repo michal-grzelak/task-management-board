@@ -10,7 +10,7 @@ import { useMachine } from '@xstate/react'
 import { Button } from '@components/Button'
 import { Input } from '@components/Input'
 
-import { boardMachine, updateBoardEvent } from '@machines/Board'
+import { addColumnEvent, boardMachine, updateBoardEvent } from '@machines/Board'
 import { BoardEvents, BoardState } from '@machines/Board/constants'
 
 import { Board } from '@models/Board'
@@ -18,6 +18,7 @@ import { Board } from '@models/Board'
 import BoardColumn from './components/BoardColumn'
 
 import './style.scss'
+import { ColumnBuilder } from '@models/builders/ColumnBuilder'
 
 const BoardDetailsPage: FunctionComponent = () => {
     const [state, send] = useMachine(boardMachine, { devTools: true })
@@ -34,7 +35,14 @@ const BoardDetailsPage: FunctionComponent = () => {
     }, [board])
 
     const addColumn = () => {
-        send(BoardEvents.ADD_COLUMN)
+        send(
+            addColumnEvent(
+                new ColumnBuilder()
+                    .withBoardId(board!.id)
+                    .withTitle(`Column ${board!.columns.length + 1}`)
+                    .build()
+            )
+        )
     }
 
     const updateName = () => {
