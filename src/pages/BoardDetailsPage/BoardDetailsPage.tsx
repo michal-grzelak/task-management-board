@@ -10,7 +10,13 @@ import { useMachine } from '@xstate/react'
 import { Button } from '@components/Button'
 import { Input } from '@components/Input'
 
-import { addColumnEvent, boardMachine, updateBoardEvent } from '@machines/Board'
+import {
+    addColumnEvent,
+    addIssueEvent,
+    boardMachine,
+    deleteColumnEvent,
+    updateBoardEvent,
+} from '@machines/Board'
 import { BoardEvents, BoardState } from '@machines/Board/constants'
 
 import { Board } from '@models/Board'
@@ -19,6 +25,8 @@ import BoardColumn from './components/BoardColumn'
 
 import './style.scss'
 import { ColumnBuilder } from '@models/builders/ColumnBuilder'
+import { Issue } from '@models/Issue'
+import { BoardMachineContext } from './utils'
 
 const BoardDetailsPage: FunctionComponent = () => {
     const [state, send] = useMachine(boardMachine, { devTools: true })
@@ -43,6 +51,14 @@ const BoardDetailsPage: FunctionComponent = () => {
                     .build()
             )
         )
+    }
+
+    const deleteColumn = (id: string) => {
+        send(deleteColumnEvent(id))
+    }
+
+    const addIssue = (issue: Issue) => {
+        send(addIssueEvent(issue))
     }
 
     const updateName = () => {
@@ -95,12 +111,16 @@ const BoardDetailsPage: FunctionComponent = () => {
             <Grid container>
                 <Grid container item xs={12}>
                     <Box style={{ overflowX: 'auto', display: 'flex' }}>
-                        {board!.columns.map((column) => (
-                            <BoardColumn
-                                key={`column-${column.id}`}
-                                column={column}
-                            />
-                        ))}
+                        <BoardMachineContext.Provider value={{ state, send }}>
+                            {board!.columns.map((column) => (
+                                <BoardColumn
+                                    key={`column-${column.id}`}
+                                    column={column}
+                                    onDelete={deleteColumn}
+                                    onAddIssue={addIssue}
+                                />
+                            ))}
+                        </BoardMachineContext.Provider>
                     </Box>
                 </Grid>
             </Grid>

@@ -192,6 +192,11 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
                 on: {
                     [BoardEvents.FETCH]: BoardState.FETCHING,
                     [BoardEvents.ADD_COLUMN]: `${BoardState.UPDATING}.${BoardUpdatingState.ADDING_COLUMN}`,
+                    [BoardEvents.UPDATE_COLUMN]: `${BoardState.UPDATING}.${BoardUpdatingState.UPDATING_COLUMN}`,
+                    [BoardEvents.DELETE_COLUMN]: `${BoardState.UPDATING}.${BoardUpdatingState.DELETING_COLUMN}`,
+                    [BoardEvents.ADD_ISSUE]: `${BoardState.UPDATING}.${BoardUpdatingState.ADDING_ISSUE}`,
+                    [BoardEvents.UPDATE_ISSUE]: `${BoardState.UPDATING}.${BoardUpdatingState.UPDATING_ISSUE}`,
+                    [BoardEvents.DELETE_ISSUE]: `${BoardState.UPDATING}.${BoardUpdatingState.DELETING_ISSUE}`,
                     [BoardEvents.UPDATE]: `${BoardState.UPDATING}.${BoardUpdatingState.UPDATING}`,
                 },
             },
@@ -229,6 +234,56 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
                         invoke: {
                             id: 'addColumn',
                             src: addColumn as any,
+                        },
+                    },
+                    [BoardUpdatingState.UPDATING_COLUMN]: {
+                        on: {
+                            [BoardEvents.UPDATE]: BoardUpdatingState.UPDATING,
+                            [BoardEvents.GO_TO_IDLE]: `#board.${BoardState.IDLE}`,
+                        },
+                        invoke: {
+                            id: 'updateColumn',
+                            src: updateColumn as any,
+                        },
+                    },
+                    [BoardUpdatingState.DELETING_COLUMN]: {
+                        on: {
+                            [BoardEvents.UPDATE]: BoardUpdatingState.UPDATING,
+                            [BoardEvents.GO_TO_IDLE]: `#board.${BoardState.IDLE}`,
+                        },
+                        invoke: {
+                            id: 'deleteColumn',
+                            src: deleteColumn as any,
+                        },
+                    },
+                    [BoardUpdatingState.ADDING_ISSUE]: {
+                        on: {
+                            [BoardEvents.UPDATE]: BoardUpdatingState.UPDATING,
+                            [BoardEvents.GO_TO_IDLE]: `#board.${BoardState.IDLE}`,
+                        },
+                        invoke: {
+                            id: 'addIssue',
+                            src: addIssue as any,
+                        },
+                    },
+                    [BoardUpdatingState.UPDATING_ISSUE]: {
+                        on: {
+                            [BoardEvents.UPDATE]: BoardUpdatingState.UPDATING,
+                            [BoardEvents.GO_TO_IDLE]: `#board.${BoardState.IDLE}`,
+                        },
+                        invoke: {
+                            id: 'updateIssue',
+                            src: updateIssue as any,
+                        },
+                    },
+                    [BoardUpdatingState.DELETING_ISSUE]: {
+                        on: {
+                            [BoardEvents.UPDATE]: BoardUpdatingState.UPDATING,
+                            [BoardEvents.GO_TO_IDLE]: `#board.${BoardState.IDLE}`,
+                        },
+                        invoke: {
+                            id: 'deleteIssue',
+                            src: deleteIssue as any,
                         },
                     },
                     [BoardUpdatingState.UPDATING]: {
@@ -269,22 +324,6 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>(
                 return Promise.resolve(
                     new BoardBuilder().withTitle(`Board 1`).build()
                 )
-            },
-            addColumn: (context, _) => (callback, _) => {
-                console.log('Adding column...')
-
-                const board = { ...context.board! }
-
-                board.columns.push(
-                    new ColumnBuilder()
-                        .withBoardId(context.board!.id)
-                        .withTitle(
-                            `Column ${context.board!.columns.length + 1}`
-                        )
-                        .build()
-                )
-
-                callback(updateBoardEvent(board))
             },
         },
     }

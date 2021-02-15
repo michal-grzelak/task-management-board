@@ -18,6 +18,8 @@
         "baseUrl": ".",
         "paths": {
             "@theme": ["src/theme"],
+            "@utils": ["src/utils"],
+            "@utils/*": ["src/utils/*"],
             "@pages/*": ["src/pages/*"],
             "@models/*": ["src/models/*"],
             "@components/*": ["src/components/*"],

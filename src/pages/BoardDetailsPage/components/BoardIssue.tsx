@@ -12,11 +12,15 @@ import { Issue } from '@models/Issue'
 
 interface BoardIssueProps {
     issue: Issue
+    onDelete: (id: string) => void
 }
 
 const BoardIssue: FunctionComponent<BoardIssueProps> = ({
     issue,
+    onDelete,
 }: BoardIssueProps) => {
+    const deleteIssue = () => onDelete(issue.id)
+
     return (
         <Card className={'issue'}>
             <CardHeader
@@ -30,7 +34,10 @@ const BoardIssue: FunctionComponent<BoardIssueProps> = ({
                             </IconButton>
                         </Grid>
                         <Grid item>
-                            <IconButton aria-label="delete">
+                            <IconButton
+                                aria-label="delete"
+                                onClick={deleteIssue}
+                            >
                                 <Delete />
                             </IconButton>
                         </Grid>

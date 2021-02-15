@@ -8,6 +8,11 @@ export interface BoardSchema {
         [BoardState.UPDATING]: {
             states: {
                 [BoardUpdatingState.ADDING_COLUMN]: {}
+                [BoardUpdatingState.UPDATING_COLUMN]: {}
+                [BoardUpdatingState.DELETING_COLUMN]: {}
+                [BoardUpdatingState.ADDING_ISSUE]: {}
+                [BoardUpdatingState.UPDATING_ISSUE]: {}
+                [BoardUpdatingState.DELETING_ISSUE]: {}
                 [BoardUpdatingState.UPDATING]: {}
             }
         }
