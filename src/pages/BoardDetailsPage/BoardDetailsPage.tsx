@@ -22,6 +22,7 @@ import { BoardEvents, BoardState } from '@machines/Board/constants'
 import { Board } from '@models/Board'
 
 import BoardColumn from './components/BoardColumn'
+import ColumnModal from './components/ColumnModal'
 
 import './style.scss'
 import { ColumnBuilder } from '@models/builders/ColumnBuilder'
@@ -34,6 +35,8 @@ const BoardDetailsPage: FunctionComponent = () => {
 
     const [title, setTitle] = useState(board?.title ?? '')
 
+    const [addColumnModalVisible, setAddColumnModalVisible] = useState(false)
+
     useEffect(() => {
         send(BoardEvents.FETCH)
     }, [])
@@ -42,12 +45,13 @@ const BoardDetailsPage: FunctionComponent = () => {
         setTitle(board?.title ?? '')
     }, [board])
 
-    const addColumn = () => {
+    const addColumn = (title: string) => {
+        setAddColumnModalVisible(false)
         send(
             addColumnEvent(
                 new ColumnBuilder()
                     .withBoardId(board!.id)
-                    .withTitle(`Column ${board!.columns.length + 1}`)
+                    .withTitle(title)
                     .build()
             )
         )
@@ -93,38 +97,51 @@ const BoardDetailsPage: FunctionComponent = () => {
         )
 
     return (
-        <Container maxWidth={false}>
-            <Grid container>
-                <Grid container item xs={12} justify={'center'}>
-                    <Button onClick={addColumn}>Add column</Button>
+        <>
+            <ColumnModal
+                modalTitle={'Add Column'}
+                initialValue={`Column ${board!.columns.length + 1}`}
+                isOpen={addColumnModalVisible}
+                onCancel={() => setAddColumnModalVisible(false)}
+                onSubmit={addColumn}
+            />
+            <Container maxWidth={false}>
+                <Grid container>
+                    <Grid container item xs={12} justify={'center'}>
+                        <Button onClick={() => setAddColumnModalVisible(true)}>
+                            Add column
+                        </Button>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Grid container style={{ marginBottom: 50 }}>
-                <Grid container item xs={12}>
-                    <Input
-                        value={title}
-                        onChange={onInputChange}
-                        onBlur={updateName}
-                    />
+                <Grid container style={{ marginBottom: 50 }}>
+                    <Grid container item xs={12}>
+                        <Input
+                            value={title}
+                            onChange={onInputChange}
+                            onBlur={updateName}
+                        />
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Grid container>
-                <Grid container item xs={12}>
-                    <Box style={{ overflowX: 'auto', display: 'flex' }}>
-                        <BoardMachineContext.Provider value={{ state, send }}>
-                            {board!.columns.map((column) => (
-                                <BoardColumn
-                                    key={`column-${column.id}`}
-                                    column={column}
-                                    onDelete={deleteColumn}
-                                    onAddIssue={addIssue}
-                                />
-                            ))}
-                        </BoardMachineContext.Provider>
-                    </Box>
+                <Grid container>
+                    <Grid container item xs={12}>
+                        <Box style={{ overflowX: 'auto', display: 'flex' }}>
+                            <BoardMachineContext.Provider
+                                value={{ state, send }}
+                            >
+                                {board!.columns.map((column) => (
+                                    <BoardColumn
+                                        key={`column-${column.id}`}
+                                        column={column}
+                                        onDelete={deleteColumn}
+                                        onAddIssue={addIssue}
+                                    />
+                                ))}
+                            </BoardMachineContext.Provider>
+                        </Box>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </Container>
+            </Container>
+        </>
     )
 }
 
