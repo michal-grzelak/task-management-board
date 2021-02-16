@@ -18,6 +18,7 @@ import { BoardMachineContext } from '@pages/BoardDetailsPage/utils'
 import { deleteIssueEvent, updateColumnEvent } from '@machines/Board'
 
 import ColumnModal from './ColumnModal'
+import IssueModal from '@pages/BoardDetailsPage/components/IssueModal'
 
 interface BoardColumnProps {
     column: Column
@@ -30,18 +31,17 @@ const BoardColumn: FunctionComponent<BoardColumnProps> = ({
     onDelete,
     onAddIssue,
 }: BoardColumnProps) => {
-    const { state, send } = useMachineContext({ machine: BoardMachineContext })
+    const { send } = useMachineContext({ machine: BoardMachineContext })
 
     const [editColumnModalVisible, setEditColumnModalVisible] = useState(false)
+    const [addIssueModalVisible, setAddIssueModalVisible] = useState(false)
 
-    const addIssue = () =>
+    const addIssue = (title: string, description: string) =>
         onAddIssue(
             new IssueBuilder()
                 .withColumnId(column.id)
-                .withTitle(`Title ${column.issues.length + 1}`)
-                .withDescription(
-                    `Description of task: Title ${column.issues.length + 1}`
-                )
+                .withTitle(title)
+                .withDescription(description)
                 .build()
         )
 
@@ -65,6 +65,16 @@ const BoardColumn: FunctionComponent<BoardColumnProps> = ({
                 onCancel={() => setEditColumnModalVisible(false)}
                 onSubmit={updateColumn}
             />
+            <IssueModal
+                modalTitle={'Add Issue'}
+                initialTitle={`Issue ${column.issues.length + 1}`}
+                initialDescription={`Description of task: Issue ${
+                    column.issues.length + 1
+                }`}
+                isOpen={addIssueModalVisible}
+                onCancel={() => setAddIssueModalVisible(false)}
+                onSubmit={addIssue}
+            />
             <Card className={'column'}>
                 <CardHeader
                     title={column.title}
@@ -72,7 +82,12 @@ const BoardColumn: FunctionComponent<BoardColumnProps> = ({
                     action={
                         <Grid container>
                             <Grid item>
-                                <IconButton aria-label="add" onClick={addIssue}>
+                                <IconButton
+                                    aria-label="add"
+                                    onClick={() =>
+                                        setAddIssueModalVisible(true)
+                                    }
+                                >
                                     <Add />
                                 </IconButton>
                             </Grid>

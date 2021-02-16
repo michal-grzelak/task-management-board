@@ -46,7 +46,6 @@ const BoardDetailsPage: FunctionComponent = () => {
     }, [board])
 
     const addColumn = (title: string) => {
-        setAddColumnModalVisible(false)
         send(
             addColumnEvent(
                 new ColumnBuilder()

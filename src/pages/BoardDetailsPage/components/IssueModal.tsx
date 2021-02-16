@@ -18,49 +18,68 @@ import { Button } from '@components/Button'
 interface ColumnModalProps {
     modalTitle: string
     initialTitle: string
+    initialDescription: string
     isOpen: boolean
     onCancel: () => void
-    onSubmit: (title: string) => void
+    onSubmit: (title: string, description: string) => void
 }
 
 const ColumnModal: FunctionComponent<ColumnModalProps> = ({
     modalTitle,
     initialTitle,
+    initialDescription,
     isOpen,
     onCancel,
     onSubmit,
 }: ColumnModalProps) => {
     const [title, setTile] = useState(initialTitle)
+    const [description, setDescription] = useState(initialDescription)
 
     useEffect(() => {
         if (initialTitle !== title) setTile(initialTitle)
-    }, [initialTitle])
+        if (initialDescription !== description)
+            setDescription(initialDescription)
+    }, [initialTitle, initialDescription])
 
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setTile(event.target.value)
     }
 
+    const handleDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setDescription(event.target.value)
+    }
+
     const handleSubmit = () => {
-        onSubmit(title)
+        onSubmit(title, description)
         onCancel()
     }
 
     const handleCancel = () => {
         setTile(initialTitle)
+        setDescription(initialDescription)
         onCancel()
     }
 
     return (
         <Dialog open={isOpen} onClose={handleCancel}>
-            <DialogTitle id="column-modal">{modalTitle}</DialogTitle>
+            <DialogTitle id="issue-modal">{modalTitle}</DialogTitle>
             <DialogContent style={{ width: 300 }}>
-                <DialogContentText>Provide Column details</DialogContentText>
+                <DialogContentText>Provide Issue details</DialogContentText>
                 <TextField
                     value={title}
-                    onChange={handleInputChange}
+                    onChange={handleTitleChange}
                     id="title"
-                    label="Column title"
+                    label="Issue title"
                     type="text"
+                    fullWidth
+                />
+                <TextField
+                    value={description}
+                    onChange={handleDescriptionChange}
+                    id="description"
+                    label="Issue description"
+                    type="text"
+                    multiline
                     fullWidth
                 />
             </DialogContent>
