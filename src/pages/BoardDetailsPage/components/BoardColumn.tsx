@@ -60,7 +60,7 @@ const BoardColumn: FunctionComponent<BoardColumnProps> = ({
         <>
             <ColumnModal
                 modalTitle={'Edit Column'}
-                initialValue={column.title}
+                initialTitle={column.title}
                 isOpen={editColumnModalVisible}
                 onCancel={() => setEditColumnModalVisible(false)}
                 onSubmit={updateColumn}

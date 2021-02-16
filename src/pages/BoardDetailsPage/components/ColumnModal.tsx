@@ -17,7 +17,7 @@ import { Button } from '@components/Button'
 
 interface ColumnModalProps {
     modalTitle: string
-    initialValue: string
+    initialTitle: string
     isOpen: boolean
     onCancel: () => void
     onSubmit: (title: string) => void
@@ -25,16 +25,16 @@ interface ColumnModalProps {
 
 const ColumnModal: FunctionComponent<ColumnModalProps> = ({
     modalTitle,
-    initialValue,
+    initialTitle,
     isOpen,
     onCancel,
     onSubmit,
 }: ColumnModalProps) => {
-    const [title, setTile] = useState(initialValue)
+    const [title, setTile] = useState(initialTitle)
 
     useEffect(() => {
-        if (initialValue !== title) setTile(initialValue)
-    }, [initialValue])
+        if (initialTitle !== title) setTile(initialTitle)
+    }, [initialTitle])
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setTile(event.target.value)
@@ -45,7 +45,7 @@ const ColumnModal: FunctionComponent<ColumnModalProps> = ({
     }
 
     const handleCancel = () => {
-        setTile(initialValue)
+        setTile(initialTitle)
         onCancel()
     }
 

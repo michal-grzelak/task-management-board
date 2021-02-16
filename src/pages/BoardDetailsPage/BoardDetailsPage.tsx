@@ -100,7 +100,7 @@ const BoardDetailsPage: FunctionComponent = () => {
         <>
             <ColumnModal
                 modalTitle={'Add Column'}
-                initialValue={`Column ${board!.columns.length + 1}`}
+                initialTitle={`Column ${board!.columns.length + 1}`}
                 isOpen={addColumnModalVisible}
                 onCancel={() => setAddColumnModalVisible(false)}
                 onSubmit={addColumn}
