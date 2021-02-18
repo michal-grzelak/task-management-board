@@ -1,5 +1,7 @@
 import { DoneInvokeEvent } from 'xstate'
+
 import { Board } from '@models/Board'
+
 import { BoardListEvents } from './constants'
 
 export type FetchBoardsEvent = { type: BoardListEvents.FETCH }
