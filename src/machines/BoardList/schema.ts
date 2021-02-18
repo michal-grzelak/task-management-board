@@ -1,10 +1,14 @@
-import { BoardListState } from './constants'
+import { BoardListState, BoardListUpdatingState } from './constants'
 
 export interface BoardListSchema {
     states: {
         [BoardListState.IDLE]: {}
         [BoardListState.FETCHING]: {}
-        [BoardListState.ADDING]: {}
+        [BoardListState.UPDATING]: {
+            states: {
+                [BoardListUpdatingState.ADDING]: {}
+            }
+        }
         [BoardListState.ERROR]: {}
     }
 }

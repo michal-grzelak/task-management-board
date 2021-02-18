@@ -1,12 +1,11 @@
 import { IBuilder } from './IBuilder'
-import { ICard } from '../ICard'
-import { Card } from '../Card'
-import { IStatus } from '../IStatus'
+import { IIssue } from '../IIssue'
+import { Issue } from '../Issue'
 import { CardType } from '../CardType'
 import { Base } from '../Base'
 
-export class CardBuilder implements IBuilder<ICard, Card> {
-    private card: ICard
+export class IssueBuilder implements IBuilder<IIssue, Issue> {
+    private card: IIssue
 
     constructor() {
         this.card = {
@@ -17,9 +16,9 @@ export class CardBuilder implements IBuilder<ICard, Card> {
         }
     }
 
-    build = (): Card => new Card(this.card)
+    build = (): Issue => new Issue(this.card)
 
-    fromData = (data: ICard): IBuilder<ICard, Card> => {
+    fromData = (data: IIssue): IBuilder<IIssue, Issue> => {
         this.card = data
 
         return this
@@ -27,12 +26,6 @@ export class CardBuilder implements IBuilder<ICard, Card> {
 
     withTitle = (title: string) => {
         this.card.title = title
-
-        return this
-    }
-
-    withStatus = (status: IStatus) => {
-        this.card.status = status
 
         return this
     }

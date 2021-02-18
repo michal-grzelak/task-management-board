@@ -1,4 +1,4 @@
 export enum CardType {
-    Task,
-    Bug,
+    Task = 'Task',
+    Bug = 'Bug',
 }

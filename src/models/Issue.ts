@@ -1,18 +1,16 @@
 import _ from 'lodash'
 
 import { Base } from './Base'
-import { ICard } from './ICard'
-import { IStatus } from './IStatus'
+import { IIssue } from './IIssue'
 import { CardType } from './CardType'
 
-export class Card extends Base implements ICard {
+export class Issue extends Base implements IIssue {
     columnId!: string
     description!: string
-    status!: IStatus
     title!: string
     type!: CardType
 
-    constructor(card: ICard) {
+    constructor(card: IIssue) {
         super()
 
         if (card) _.assign(this, card)

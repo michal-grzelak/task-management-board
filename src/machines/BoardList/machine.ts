@@ -1,16 +1,32 @@
-import { assign, Machine } from 'xstate'
+import { assign, Machine, spawn } from 'xstate'
 import { BoardListContext } from './context'
 import { BoardListSchema } from './schema'
 import { AddBoardSuccessEvent, BoardListEvent } from './events'
-import { BoardListEvents, BoardListState } from './constants'
+import {
+    BoardListEvents,
+    BoardListState,
+    BoardListUpdatingState,
+} from './constants'
 import { BoardBuilder } from '@models/builders/BoardBuilder'
+import { boardMachine } from '@machines/Board'
 
 const addBoardSuccess = assign<BoardListContext, AddBoardSuccessEvent>(
     (context, event) => {
         console.log('Add board success!')
 
+        const board = event.data
+
         return {
-            boards: [...context.boards, event.data],
+            boards: [
+                ...context.boards,
+                spawn(
+                    boardMachine.withContext({
+                        id: board.id,
+                        board: board,
+                    }),
+                    { name: `board-${board.id}` }
+                ),
+            ],
         }
     }
 )
@@ -22,6 +38,7 @@ export const boardListMachine = Machine<
 >(
     {
         key: 'boardList',
+        id: 'boardList',
         initial: BoardListState.IDLE,
         context: {
             boards: [],
@@ -30,7 +47,7 @@ export const boardListMachine = Machine<
             [BoardListState.IDLE]: {
                 on: {
                     [BoardListEvents.FETCH]: BoardListState.FETCHING,
-                    [BoardListEvents.ADD]: BoardListState.ADDING,
+                    [BoardListEvents.ADD]: `${BoardListState.UPDATING}.${BoardListUpdatingState.ADDING}`,
                 },
             },
             [BoardListState.FETCHING]: {
@@ -47,17 +64,21 @@ export const boardListMachine = Machine<
                     },
                 },
             },
-            [BoardListState.ADDING]: {
-                invoke: {
-                    id: 'addBoard',
-                    src: 'addBoard',
-                    onDone: {
-                        target: BoardListState.IDLE,
-                        actions: addBoardSuccess,
-                    },
-                    onError: {
-                        target: BoardListState.ERROR,
-                        actions: 'addBoardFailure',
+            [BoardListState.UPDATING]: {
+                states: {
+                    [BoardListUpdatingState.ADDING]: {
+                        invoke: {
+                            id: 'addBoard',
+                            src: 'addBoard',
+                            onDone: {
+                                target: `#boardList.${BoardListState.IDLE}`,
+                                actions: addBoardSuccess,
+                            },
+                            onError: {
+                                target: `#boardList.${BoardListState.ERROR}`,
+                                actions: 'addBoardFailure',
+                            },
+                        },
                     },
                 },
             },
@@ -78,7 +99,7 @@ export const boardListMachine = Machine<
         },
         services: {
             fetchBoards: (context, event) => {
-                console.log('Fetching...')
+                console.log('Fetching boards...')
 
                 return Promise.resolve([])
             },
