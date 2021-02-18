@@ -341,6 +341,7 @@ module.exports = function (webpackEnv) {
                     'scheduler/tracing': 'scheduler/tracing-profiling',
                 }),
                 '@utils': 'src/utils',
+                '@services': 'src/services',
                 '@theme': 'src/theme',
                 '@pages': 'src/pages',
                 '@models': 'src/models',
