@@ -15,7 +15,7 @@ import { Issue } from '@models/Issue'
 import { IssueBuilder } from '@models/builders/IssueBuilder'
 import { useMachineContext } from '@utils'
 import { BoardMachineContext } from '@pages/BoardDetailsPage/utils'
-import { deleteIssueEvent, updateColumnEvent } from '@machines/Board'
+import { deleteIssueEvent, updateIssueEvent } from '@machines/Board'
 
 import ColumnModal from './ColumnModal'
 import IssueModal from '@pages/BoardDetailsPage/components/IssueModal'
@@ -24,12 +24,14 @@ interface BoardColumnProps {
     column: Column
     onDelete: (id: string) => void
     onAddIssue: (issue: Issue) => void
+    onUpdate: (column: Column) => void
 }
 
 const BoardColumn: FunctionComponent<BoardColumnProps> = ({
     column,
     onDelete,
     onAddIssue,
+    onUpdate,
 }: BoardColumnProps) => {
     const { send } = useMachineContext({ machine: BoardMachineContext })
 
@@ -46,14 +48,17 @@ const BoardColumn: FunctionComponent<BoardColumnProps> = ({
         )
 
     const updateColumn = (title: string) => {
-        setEditColumnModalVisible(false)
-        send(updateColumnEvent({ ...column, title }))
+        onUpdate({ ...column, title })
     }
 
     const deleteColumn = () => onDelete(column.id)
 
     const deleteIssue = (id: string) => {
         send(deleteIssueEvent(id, column.id))
+    }
+
+    const updateIssue = (issue: Issue) => {
+        send(updateIssueEvent(issue))
     }
 
     return (
@@ -118,6 +123,7 @@ const BoardColumn: FunctionComponent<BoardColumnProps> = ({
                             key={`issue-${issue.id}`}
                             issue={issue}
                             onDelete={deleteIssue}
+                            onUpdate={updateIssue}
                         />
                     ))}
                 </CardContent>

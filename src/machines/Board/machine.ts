@@ -21,7 +21,6 @@ import {
 } from './events'
 import { BoardEvents, BoardState, BoardUpdatingState } from './constants'
 import { BoardBuilder } from '@models/builders/BoardBuilder'
-import { ColumnBuilder } from '@models/builders/ColumnBuilder'
 import { Board } from '@models/Board'
 
 const initialize = (context: BoardContext, _: BoardEvent) => (

@@ -9,28 +9,26 @@ import {
 import { Edit, Delete } from '@material-ui/icons'
 
 import { Issue } from '@models/Issue'
-import IssueModal from '@pages/BoardDetailsPage/components/IssueModal'
-import { useMachineContext } from '@utils'
-import { BoardMachineContext } from '@pages/BoardDetailsPage/utils'
-import { updateIssueEvent } from '@machines/Board'
+
+import IssueModal from './IssueModal'
 
 interface BoardIssueProps {
     issue: Issue
     onDelete: (id: string) => void
+    onUpdate: (issue: Issue) => void
 }
 
 const BoardIssue: FunctionComponent<BoardIssueProps> = ({
     issue,
     onDelete,
+    onUpdate,
 }: BoardIssueProps) => {
-    const { send } = useMachineContext({ machine: BoardMachineContext })
-
     const [editIssueModalVisible, setEditIssueModalVisible] = useState(false)
 
     const deleteIssue = () => onDelete(issue.id)
 
     const updateIssue = (title: string, description: string) => {
-        send(updateIssueEvent({ ...issue, title, description }))
+        onUpdate({ ...issue, title, description })
     }
 
     return (

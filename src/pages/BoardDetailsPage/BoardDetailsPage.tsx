@@ -16,6 +16,7 @@ import {
     boardMachine,
     deleteColumnEvent,
     updateBoardEvent,
+    updateColumnEvent,
 } from '@machines/Board'
 import { BoardEvents, BoardState } from '@machines/Board/constants'
 
@@ -28,6 +29,7 @@ import './style.scss'
 import { ColumnBuilder } from '@models/builders/ColumnBuilder'
 import { Issue } from '@models/Issue'
 import { BoardMachineContext } from './utils'
+import { Column } from '@models/Column'
 
 const BoardDetailsPage: FunctionComponent = () => {
     const [state, send] = useMachine(boardMachine, { devTools: true })
@@ -58,6 +60,10 @@ const BoardDetailsPage: FunctionComponent = () => {
 
     const deleteColumn = (id: string) => {
         send(deleteColumnEvent(id))
+    }
+
+    const updateColumn = (column: Column) => {
+        send(updateColumnEvent(column))
     }
 
     const addIssue = (issue: Issue) => {
@@ -133,6 +139,7 @@ const BoardDetailsPage: FunctionComponent = () => {
                                         column={column}
                                         onDelete={deleteColumn}
                                         onAddIssue={addIssue}
+                                        onUpdate={updateColumn}
                                     />
                                 ))}
                             </BoardMachineContext.Provider>
