@@ -1,8 +1,10 @@
 import { DoneInvokeEvent } from 'xstate'
+
 import { Board } from '@models/Board'
 import { Column } from '@models/Column'
-import { BoardEvents } from './constants'
 import { Issue } from '@models/Issue'
+
+import { BoardEvents } from './constants'
 
 export type FetchBoardEvent = { type: BoardEvents.FETCH }
 export type GoToIdleBoardEvent = { type: BoardEvents.GO_TO_IDLE }
