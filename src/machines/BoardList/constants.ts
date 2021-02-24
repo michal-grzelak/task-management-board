@@ -7,9 +7,11 @@ export enum BoardListState {
 
 export enum BoardListUpdatingState {
     ADDING = 'ADDING',
+    DELETING = 'DELETING',
 }
 
 export enum BoardListEvents {
     FETCH = 'FETCH',
     ADD = 'ADD',
+    DELETE = 'DELETE',
 }

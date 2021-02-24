@@ -4,7 +4,11 @@ import { useMachine } from '@xstate/react'
 
 import { Button } from '@components/Button'
 
-import { addBoardEvent, boardListMachine } from '@machines/BoardList'
+import {
+    addBoardEvent,
+    boardListMachine,
+    deleteBoardEvent,
+} from '@machines/BoardList'
 import { BoardListEvents } from '@machines/BoardList/constants'
 
 import BoardTile from './components/BoardTile'
@@ -21,6 +25,10 @@ const BoardListPage: FunctionComponent = () => {
     }, [])
 
     const addBoard = () => send(addBoardEvent)
+
+    const deleteBoard = (id: string) => {
+        send(deleteBoardEvent(id))
+    }
 
     const boards = state.context.boards
 
@@ -43,6 +51,7 @@ const BoardListPage: FunctionComponent = () => {
                         <BoardTile
                             board={board.state.context.board}
                             state={board.state.value.toString()}
+                            onDelete={deleteBoard}
                         />
                     </Grid>
                 ))}

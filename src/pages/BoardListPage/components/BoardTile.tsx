@@ -1,22 +1,38 @@
-import React, { FunctionComponent } from 'react'
-import { Card, CardContent, CardHeader } from '@material-ui/core'
+import React, { FunctionComponent, MouseEvent } from 'react'
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    Grid,
+    IconButton,
+} from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 
 import { Board } from '@models/Board'
+import { Delete } from '@material-ui/icons'
 
 interface BoardProps {
     board?: Board
     state: string
+    onDelete: (id: string) => void
 }
 
 const BoardTile: FunctionComponent<BoardProps> = ({
     board,
     state,
+    onDelete,
 }: BoardProps) => {
     const history = useHistory()
 
     const goToBoard = () => {
         history.push(`/boards/${board!.id}`)
+    }
+
+    const deleteBoard = (event: MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault()
+        event.stopPropagation()
+
+        onDelete(board!.id)
     }
 
     console.log(state)
@@ -25,7 +41,21 @@ const BoardTile: FunctionComponent<BoardProps> = ({
 
     return (
         <Card className={'board-tile'} onClick={goToBoard}>
-            <CardHeader title={board.title} />
+            <CardHeader
+                title={board.title}
+                action={
+                    <Grid container>
+                        <Grid item>
+                            <IconButton
+                                aria-label="delete"
+                                onClick={deleteBoard}
+                            >
+                                <Delete />
+                            </IconButton>
+                        </Grid>{' '}
+                    </Grid>
+                }
+            />
             <CardContent>{board.id}</CardContent>
         </Card>
     )
