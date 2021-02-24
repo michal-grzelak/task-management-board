@@ -18,6 +18,7 @@ import {
     updateColumn,
     updateIssue,
 } from './actions'
+import { BoardService } from '@services'
 
 export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>({
     key: 'board',
@@ -26,6 +27,7 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>({
     context: {
         id: '',
         board: undefined,
+        boardService: new BoardService(),
     },
     states: {
         [BoardState.IDLE]: {

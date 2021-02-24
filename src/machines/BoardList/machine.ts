@@ -19,6 +19,7 @@ import {
     fetchBoardsFailure,
     fetchBoardsSuccess,
 } from '@machines/BoardList/actions'
+import { BoardService } from '@services'
 
 export const boardListMachine = Machine<
     BoardListContext,
@@ -30,6 +31,7 @@ export const boardListMachine = Machine<
     initial: BoardListState.IDLE,
     context: {
         boards: [],
+        boardService: new BoardService(),
     },
     states: {
         [BoardListState.IDLE]: {

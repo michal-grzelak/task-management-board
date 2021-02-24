@@ -9,6 +9,7 @@ import {
     BoardListEvent,
     DeleteBoardEvent,
     DeleteBoardSuccessEvent,
+    FetchBoardsSuccessEvent,
 } from './events'
 
 export const fetchBoards = (
@@ -17,15 +18,32 @@ export const fetchBoards = (
 ) => {
     console.log('Fetching boards...')
 
-    return Promise.resolve([])
+    const boards = _context.boardService.getBoards()
+
+    if (boards) return Promise.resolve(boards)
+
+    return Promise.reject()
 }
 
-export const fetchBoardsSuccess = (
-    _context: BoardListContext,
-    _event: BoardListEvent
-) => {
+export const fetchBoardsSuccess = assign<
+    BoardListContext,
+    FetchBoardsSuccessEvent
+>((_context, _event) => {
     console.log('Fetch boards success!')
-}
+
+    return {
+        boards: _event.data.map((board) =>
+            spawn(
+                boardMachine.withContext({
+                    id: board.id,
+                    board: board,
+                    boardService: _context.boardService,
+                }),
+                { name: `board-${board.id}` }
+            )
+        ),
+    }
+})
 
 export const fetchBoardsFailure = (
     _context: BoardListContext,
@@ -40,11 +58,15 @@ export const addBoard = (
 ) => {
     console.log('Adding board...')
 
-    return Promise.resolve(
+    const board = _context.boardService.addBoard(
         new BoardBuilder()
             .withTitle(`Board ${_context.boards.length + 1}`)
             .build()
     )
+
+    if (board) return Promise.resolve(board)
+
+    return Promise.reject()
 }
 
 export const addBoardSuccess = assign<BoardListContext, AddBoardSuccessEvent>(
@@ -60,6 +82,7 @@ export const addBoardSuccess = assign<BoardListContext, AddBoardSuccessEvent>(
                     boardMachine.withContext({
                         id: board.id,
                         board: board,
+                        boardService: _context.boardService,
                     }),
                     { name: `board-${board.id}` }
                 ),
@@ -81,7 +104,11 @@ export const deleteBoard = (
 ) => {
     console.log('Deleting board...')
 
-    return Promise.resolve(_event.id)
+    const board = _context.boardService.deleteBoard(_event.id)
+
+    if (board) return Promise.resolve(_event.id)
+
+    return Promise.reject()
 }
 
 export const deleteBoardSuccess = assign<

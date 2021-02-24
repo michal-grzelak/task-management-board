@@ -54,11 +54,11 @@ export class BoardService implements IBoardService {
         const boardIndex = boards.findIndex(({ id: boardId }) => boardId === id)
 
         if (boardIndex >= 0) {
-            boards.splice(boardIndex, 1)
+            const removedBoards = boards.splice(boardIndex, 1)
 
             const result = this.apiService.set<Board[]>(this.boardsKey, boards)
 
-            return result ? result[boardIndex] : null
+            return result !== null ? removedBoards[0] : null
         }
 
         return null
