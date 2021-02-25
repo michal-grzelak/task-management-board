@@ -1,7 +1,6 @@
 import React from 'react'
-import { BrowserRouter, Link, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Link, Switch, Route, Redirect } from 'react-router-dom'
 
-import { ExamplePage } from '@pages/ExamplePage'
 import { BoardListPage } from '@pages/BoardListPage'
 import { BoardDetailsPage } from '@pages/BoardDetailsPage'
 
@@ -11,9 +10,6 @@ function App() {
             <div>
                 <ul>
                     <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
                         <Link to="/boards">Boards</Link>
                     </li>
                 </ul>
@@ -22,7 +18,7 @@ function App() {
 
                 <Switch>
                     <Route exact path="/">
-                        <ExamplePage />
+                        <Redirect to="/boards" />
                     </Route>
                     <Route path="/boards/:id">
                         <BoardDetailsPage />

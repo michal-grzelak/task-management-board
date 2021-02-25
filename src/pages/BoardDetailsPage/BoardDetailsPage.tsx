@@ -102,9 +102,10 @@ const BoardDetailsPage: FunctionComponent<BoardDetailsProps> = ({
     console.log(state)
 
     const isLoading =
-        !board ||
         state.matches(BoardState.INITIALIZING) ||
         state.matches(BoardState.FETCHING)
+
+    const isError = !board && state.matches(BoardState.ERROR)
 
     if (isLoading)
         return (
@@ -112,6 +113,17 @@ const BoardDetailsPage: FunctionComponent<BoardDetailsProps> = ({
                 <Grid container>
                     <Grid container item xs={12} justify={'center'}>
                         Loading...
+                    </Grid>
+                </Grid>
+            </Container>
+        )
+
+    if (isError)
+        return (
+            <Container maxWidth={false}>
+                <Grid container>
+                    <Grid container item xs={12} justify={'center'}>
+                        ERROR!
                     </Grid>
                 </Grid>
             </Container>
