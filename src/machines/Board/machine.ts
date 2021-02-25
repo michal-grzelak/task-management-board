@@ -55,7 +55,7 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>({
         [BoardState.FETCHING]: {
             invoke: {
                 id: 'fetchBoard',
-                src: fetchBoard,
+                src: fetchBoard as any,
                 onDone: {
                     target: BoardState.IDLE,
                     actions: fetchBoardSuccess,

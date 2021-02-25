@@ -6,6 +6,7 @@ import React, {
 } from 'react'
 import { Box, Container, Grid } from '@material-ui/core'
 import { useMachine } from '@xstate/react'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 
 import { Button } from '@components/Button'
 import { Input } from '@components/Input'
@@ -15,10 +16,11 @@ import {
     addIssueEvent,
     boardMachine,
     deleteColumnEvent,
+    fetchBoardEvent,
     updateBoardEvent,
     updateColumnEvent,
 } from '@machines/Board'
-import { BoardEvents, BoardState } from '@machines/Board/constants'
+import { BoardState } from '@machines/Board/constants'
 
 import { Board } from '@models/Board'
 
@@ -31,8 +33,22 @@ import { Issue } from '@models/Issue'
 import { BoardMachineContext } from './utils'
 import { Column } from '@models/Column'
 
-const BoardDetailsPage: FunctionComponent = () => {
-    const [state, send] = useMachine(boardMachine, { devTools: true })
+interface MatchParams {
+    id: string
+}
+
+interface BoardDetailsProps extends RouteComponentProps<MatchParams> {}
+
+const BoardDetailsPage: FunctionComponent<BoardDetailsProps> = ({
+    match,
+}: BoardDetailsProps) => {
+    const boardId = match.params.id
+
+    const [state, send] = useMachine(
+        boardMachine.withContext({ ...boardMachine.context!, id: boardId }),
+        { devTools: true }
+    )
+
     const board = state.context.board
 
     const [title, setTitle] = useState(board?.title ?? '')
@@ -40,7 +56,7 @@ const BoardDetailsPage: FunctionComponent = () => {
     const [addColumnModalVisible, setAddColumnModalVisible] = useState(false)
 
     useEffect(() => {
-        send(BoardEvents.FETCH)
+        send(fetchBoardEvent(boardId))
     }, [])
 
     useEffect(() => {
@@ -151,4 +167,4 @@ const BoardDetailsPage: FunctionComponent = () => {
     )
 }
 
-export default BoardDetailsPage
+export default withRouter(BoardDetailsPage)

@@ -6,9 +6,10 @@ import { Issue } from '@models/Issue'
 
 import { BoardEvents } from './constants'
 
-export type FetchBoardEvent = { type: BoardEvents.FETCH }
+export type FetchBoardEvent = { type: BoardEvents.FETCH; id: string }
 export type GoToIdleBoardEvent = { type: BoardEvents.GO_TO_IDLE }
 export type UpdateBoardEvent = { type: BoardEvents.UPDATE; board: Board }
+
 export type AddColumnEvent = {
     type: BoardEvents.ADD_COLUMN
     column: Column
@@ -35,6 +36,10 @@ export type DeleteIssueEvent = {
     issueId: string
 }
 
+export const fetchBoardEvent = (id: string): FetchBoardEvent => ({
+    type: BoardEvents.FETCH,
+    id,
+})
 export const updateBoardEvent = (board: Board): UpdateBoardEvent => ({
     type: BoardEvents.UPDATE,
     board,
