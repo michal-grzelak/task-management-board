@@ -1,7 +1,6 @@
 import { assign, DoneInvokeEvent, EventObject, Receiver, Sender } from 'xstate'
 
 import { Board } from '@models/Board'
-import { BoardBuilder } from '@models/builders/BoardBuilder'
 
 import { BoardContext } from './context'
 import { BoardEvents } from './constants'
@@ -11,6 +10,8 @@ import {
     BoardEvent,
     DeleteColumnEvent,
     DeleteIssueEvent,
+    fetchBoardEvent,
+    FetchBoardEvent,
     updateBoardEvent,
     UpdateBoardEvent,
     UpdateColumnEvent,
@@ -21,14 +22,20 @@ export const initialize = (_context: BoardContext, _event: BoardEvent) => (
     callback: Sender<any>,
     _: Receiver<EventObject>
 ) => {
-    if (!_context.board) callback(BoardEvents.FETCH)
+    if (!_context.board) callback(fetchBoardEvent(_context.id))
     else callback(BoardEvents.GO_TO_IDLE)
 }
 
-export const fetchBoard = (_context: BoardContext, _event: BoardEvent) => {
+export const fetchBoard = (_context: BoardContext, _event: FetchBoardEvent) => {
     console.log('Fetching board...')
 
-    return Promise.resolve(new BoardBuilder().withTitle(`Board 1`).build())
+    const board = _context.boardService.getBoard(_event.id)
+
+    console.log(_event)
+
+    if (board) return Promise.resolve(board)
+
+    return Promise.reject()
 }
 
 export const fetchBoardSuccess = assign<BoardContext, DoneInvokeEvent<Board>>(
@@ -50,11 +57,17 @@ export const fetchBoardFailure = (
     console.log('Fetch board failure!')
 }
 
-export const updateBoardFailure = (
+export const updateBoard = (
     _context: BoardContext,
-    _event: BoardEvent
+    _event: UpdateBoardEvent
 ) => {
-    console.log('Update board failure!')
+    console.log('Updating board...')
+
+    const board = _context.boardService.updateBoard(_event.board)
+
+    if (board) return Promise.resolve(board)
+
+    return Promise.reject()
 }
 
 export const updateBoardSuccess = assign<BoardContext, DoneInvokeEvent<Board>>(
@@ -69,13 +82,11 @@ export const updateBoardSuccess = assign<BoardContext, DoneInvokeEvent<Board>>(
     }
 )
 
-export const updateBoard = (
+export const updateBoardFailure = (
     _context: BoardContext,
-    _event: UpdateBoardEvent
+    _event: BoardEvent
 ) => {
-    console.log('Updating board...')
-
-    return Promise.resolve(_event.board)
+    console.log('Update board failure!')
 }
 
 export const addColumn = (_context: BoardContext, _event: AddColumnEvent) => (

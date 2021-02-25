@@ -12,10 +12,14 @@ import {
     addBoard,
     addBoardFailure,
     addBoardSuccess,
+    deleteBoard,
+    deleteBoardFailure,
+    deleteBoardSuccess,
     fetchBoards,
     fetchBoardsFailure,
     fetchBoardsSuccess,
 } from '@machines/BoardList/actions'
+import { BoardService } from '@services'
 
 export const boardListMachine = Machine<
     BoardListContext,
@@ -27,12 +31,14 @@ export const boardListMachine = Machine<
     initial: BoardListState.IDLE,
     context: {
         boards: [],
+        boardService: new BoardService(),
     },
     states: {
         [BoardListState.IDLE]: {
             on: {
                 [BoardListEvents.FETCH]: BoardListState.FETCHING,
                 [BoardListEvents.ADD]: `${BoardListState.UPDATING}.${BoardListUpdatingState.ADDING}`,
+                [BoardListEvents.DELETE]: `${BoardListState.UPDATING}.${BoardListUpdatingState.DELETING}`,
             },
         },
         [BoardListState.FETCHING]: {
@@ -62,6 +68,20 @@ export const boardListMachine = Machine<
                         onError: {
                             target: `#boardList.${BoardListState.ERROR}`,
                             actions: addBoardFailure,
+                        },
+                    },
+                },
+                [BoardListUpdatingState.DELETING]: {
+                    invoke: {
+                        id: 'deleteBoard',
+                        src: deleteBoard as any,
+                        onDone: {
+                            target: `#boardList.${BoardListState.IDLE}`,
+                            actions: deleteBoardSuccess,
+                        },
+                        onError: {
+                            target: `#boardList.${BoardListState.ERROR}`,
+                            actions: deleteBoardFailure,
                         },
                     },
                 },

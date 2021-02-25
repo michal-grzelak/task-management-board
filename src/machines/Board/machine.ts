@@ -18,6 +18,7 @@ import {
     updateColumn,
     updateIssue,
 } from './actions'
+import { BoardService } from '@services'
 
 export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>({
     key: 'board',
@@ -26,6 +27,7 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>({
     context: {
         id: '',
         board: undefined,
+        boardService: new BoardService(),
     },
     states: {
         [BoardState.IDLE]: {
@@ -53,7 +55,7 @@ export const boardMachine = Machine<BoardContext, BoardSchema, BoardEvent>({
         [BoardState.FETCHING]: {
             invoke: {
                 id: 'fetchBoard',
-                src: fetchBoard,
+                src: fetchBoard as any,
                 onDone: {
                     target: BoardState.IDLE,
                     actions: fetchBoardSuccess,

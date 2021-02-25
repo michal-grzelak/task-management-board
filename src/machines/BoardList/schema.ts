@@ -7,6 +7,7 @@ export interface BoardListSchema {
         [BoardListState.UPDATING]: {
             states: {
                 [BoardListUpdatingState.ADDING]: {}
+                [BoardListUpdatingState.DELETING]: {}
             }
         }
         [BoardListState.ERROR]: {}
