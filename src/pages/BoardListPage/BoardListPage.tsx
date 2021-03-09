@@ -2,14 +2,14 @@ import React, { FunctionComponent, useEffect } from 'react'
 import { Container, Grid } from '@material-ui/core'
 import { useMachine } from '@xstate/react'
 
-import { Button } from '@components/Button'
-
 import {
     addBoardEvent,
     boardListMachine,
     deleteBoardEvent,
 } from '@machines/BoardList'
 import { BoardListEvents } from '@machines/BoardList/constants'
+
+import { Button } from '@components/Button'
 
 import BoardTile from './components/BoardTile'
 
@@ -39,14 +39,16 @@ const BoardListPage: FunctionComponent = () => {
                     <Button onClick={addBoard}>Create Board</Button>
                 </Grid>
             </Grid>
-            <Grid container>
+            <Grid container style={{ marginTop: 30 }}>
                 {boards.map((board, index) => (
                     <Grid
                         key={`board-tile-${index}`}
                         container
                         item
-                        xs={3}
                         justify={'center'}
+                        xs={6}
+                        md={3}
+                        xl={2}
                     >
                         <BoardTile
                             board={board.state.context.board}

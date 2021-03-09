@@ -8,8 +8,10 @@ import { Box, Container, Grid } from '@material-ui/core'
 import { useMachine } from '@xstate/react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 
-import { Button } from '@components/Button'
-import { Input } from '@components/Input'
+import { ColumnBuilder } from '@models/builders/ColumnBuilder'
+import { Issue } from '@models/Issue'
+import { Column } from '@models/Column'
+import { Board } from '@models/Board'
 
 import {
     addColumnEvent,
@@ -22,16 +24,14 @@ import {
 } from '@machines/Board'
 import { BoardState } from '@machines/Board/constants'
 
-import { Board } from '@models/Board'
+import { Button } from '@components/Button'
+import { Input } from '@components/Input'
 
 import BoardColumn from './components/BoardColumn'
 import ColumnModal from './components/ColumnModal'
 
 import './style.scss'
-import { ColumnBuilder } from '@models/builders/ColumnBuilder'
-import { Issue } from '@models/Issue'
 import { BoardMachineContext } from './utils'
-import { Column } from '@models/Column'
 
 interface MatchParams {
     id: string

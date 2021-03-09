@@ -13,6 +13,8 @@ import {
     TextField,
 } from '@material-ui/core'
 
+import { colors } from '@theme'
+
 import { Button } from '@components/Button'
 
 interface ColumnModalProps {
@@ -51,7 +53,14 @@ const ColumnModal: FunctionComponent<ColumnModalProps> = ({
     }
 
     return (
-        <Dialog open={isOpen} onClose={handleCancel}>
+        <Dialog
+            open={isOpen}
+            onClose={handleCancel}
+            PaperProps={{
+                style: { backgroundColor: colors.darkRichBlack },
+                variant: 'outlined',
+            }}
+        >
             <DialogTitle id="column-modal">{modalTitle}</DialogTitle>
             <DialogContent style={{ width: 300 }}>
                 <DialogContentText>Provide Column details</DialogContentText>

@@ -1,24 +1,23 @@
 import React, { FunctionComponent, useState } from 'react'
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    Grid,
-    IconButton,
-} from '@material-ui/core'
+import { CardContent, CardHeader, Grid, IconButton } from '@material-ui/core'
 import { Add, Delete, Edit } from '@material-ui/icons'
 
 import { Column } from '@models/Column'
 
-import BoardIssue from './BoardIssue'
+import { colors } from '@theme'
+import { useMachineContext } from '@utils'
+
 import { Issue } from '@models/Issue'
 import { IssueBuilder } from '@models/builders/IssueBuilder'
-import { useMachineContext } from '@utils'
-import { BoardMachineContext } from '@pages/BoardDetailsPage/utils'
-import { deleteIssueEvent, updateIssueEvent } from '@machines/Board'
 
+import { deleteIssueEvent, updateIssueEvent } from '@machines/Board'
+import { Card } from '@components/Card'
+
+import BoardIssue from './BoardIssue'
 import ColumnModal from './ColumnModal'
-import IssueModal from '@pages/BoardDetailsPage/components/IssueModal'
+import IssueModal from './IssueModal'
+
+import { BoardMachineContext } from '../utils'
 
 interface BoardColumnProps {
     column: Column
@@ -80,7 +79,13 @@ const BoardColumn: FunctionComponent<BoardColumnProps> = ({
                 onCancel={() => setAddIssueModalVisible(false)}
                 onSubmit={addIssue}
             />
-            <Card className={'column'}>
+            <Card
+                className={'column'}
+                style={{
+                    backgroundColor: colors.darkRichBlack,
+                    marginRight: 15,
+                }}
+            >
                 <CardHeader
                     title={column.title}
                     subheader={column.id}
