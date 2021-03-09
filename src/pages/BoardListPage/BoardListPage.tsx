@@ -2,14 +2,14 @@ import React, { FunctionComponent, useEffect } from 'react'
 import { Container, Grid } from '@material-ui/core'
 import { useMachine } from '@xstate/react'
 
-import { Button } from '@components/Button'
-
 import {
     addBoardEvent,
     boardListMachine,
     deleteBoardEvent,
 } from '@machines/BoardList'
 import { BoardListEvents } from '@machines/BoardList/constants'
+
+import { Button } from '@components/Button'
 
 import BoardTile from './components/BoardTile'
 

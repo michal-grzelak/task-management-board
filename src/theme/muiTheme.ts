@@ -4,6 +4,7 @@ import { theme } from './theme'
 
 export const muiTheme = createMuiTheme({
     palette: {
+        type: 'dark',
         primary: {
             main: theme.colors.primary,
             contrastText: theme.colors.fonts.light,

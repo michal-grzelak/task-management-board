@@ -1,14 +1,12 @@
 import React, { FunctionComponent, useState } from 'react'
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    Grid,
-    IconButton,
-} from '@material-ui/core'
+import { CardContent, CardHeader, Grid, IconButton } from '@material-ui/core'
 import { Edit, Delete } from '@material-ui/icons'
 
+import { colors } from '@theme'
+
 import { Issue } from '@models/Issue'
+
+import { Card } from '@components/Card'
 
 import IssueModal from './IssueModal'
 
@@ -41,7 +39,13 @@ const BoardIssue: FunctionComponent<BoardIssueProps> = ({
                 onCancel={() => setEditIssueModalVisible(false)}
                 onSubmit={updateIssue}
             />
-            <Card className={'issue'}>
+            <Card
+                className={'issue'}
+                style={{
+                    backgroundColor: colors.lightRichBlack,
+                    marginBottom: 15,
+                }}
+            >
                 <CardHeader
                     title={issue.title}
                     subheader={issue.type}

@@ -1,15 +1,13 @@
 import React, { FunctionComponent, MouseEvent } from 'react'
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    Grid,
-    IconButton,
-} from '@material-ui/core'
+import { CardContent, CardHeader, Grid, IconButton } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
+import { Delete } from '@material-ui/icons'
+
+import { colors } from '@theme'
 
 import { Board } from '@models/Board'
-import { Delete } from '@material-ui/icons'
+
+import { Card } from '@components/Card'
 
 interface BoardProps {
     board?: Board
@@ -40,7 +38,15 @@ const BoardTile: FunctionComponent<BoardProps> = ({
     if (!board) return <></>
 
     return (
-        <Card className={'board-tile'} onClick={goToBoard}>
+        <Card
+            className={'board-tile'}
+            onClick={goToBoard}
+            style={{
+                margin: 10,
+                backgroundColor: colors.lightRichBlack,
+                cursor: 'pointer',
+            }}
+        >
             <CardHeader
                 title={board.title}
                 action={
